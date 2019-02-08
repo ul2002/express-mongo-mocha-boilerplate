@@ -31,6 +31,11 @@ The server will run on port 5991. You can change this by editing `.env` file.
 ```
 npm run build
 ```
+## Run Api Designer
+
+```
+npm run api-designer
+```
 ## Run Tests
 
 ```
