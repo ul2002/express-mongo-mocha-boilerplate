@@ -1,5 +1,6 @@
 import logger from '../core/logger/app-logger';
 import * as bcrypt from 'bcryptjs';
+import { translate } from '../core/utils/helpers';
 
 import {
   DEV_UPDATE_FAILED,
@@ -32,7 +33,7 @@ controller.hello =  (req, res) => {
 
 controller.getAll =  (req, res) => {
     try {
-      res.json(['example']);
+      res.json(translate('login','fr'));
     } catch (err) {
       logger.error(`${DEV_FINDALL_FAILED} example- ${err}`);
       res.status(400).json({ error: `${PROD_FINDALL_FAILED} example` });
