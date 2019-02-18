@@ -96,10 +96,10 @@ logger.write =  (level, message,cookie) => {
 logger.error =  (message, onlywinston = 0) => {
   if (!onlywinston) {
     initialize().then(function(cookie) {
-      logger.write('error',message,cookie)
+      logger.write('error',(message.stack) ? message.stack : message ,cookie)
     });   
   }
-  local_logger.error(message);   
+  local_logger.error((message.stack) ? message.stack : message);   
 };
 
 logger.info =  (message, onlywinston = 0) => {
