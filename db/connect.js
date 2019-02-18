@@ -17,7 +17,7 @@ const dbConnection = async () => {
     } else {
       await Mongoose.connect(`mongodb://${dbUser}:${dbPswd}@${dbHost}:${dbPort}/${dbName}`, { useMongoClient: true });
     }
-    logger.info(DB_CONNECTION_SUCCESS);
+    logger.info(DB_CONNECTION_SUCCESS,1);
   } catch (err) {
     logger.error(err.stack);
   }

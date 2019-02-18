@@ -1,5 +1,12 @@
 require('dotenv').config();
 
+import path from 'path';
+import * as fs from 'fs';
+import * as winston from 'winston';
+import * as rotate from 'winston-daily-rotate-file';
+
+const dir = path.join(__dirname, process.env.LOG_FILE_DIR);
+
 const request = require("request");
 const uuidv4 = require('uuid/v4');
 
@@ -10,7 +17,28 @@ const logger_port = process.env.LOGGER_PORT;
 const logger_user = process.env.LOGGER_USER;
 const logger_password = process.env.LOGGER_PASSWORD;
 
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+
+
 const logger = {};
+
+const winston_logger = new winston.Logger({
+  level: 'info',
+  transports: [
+    new (winston.transports.Console)({
+      colorize: true,
+    }),
+    new winston.transports.DailyRotateFile({
+      filename: process.env.LOG_FILE_NAME,
+      dirname: dir,
+      maxsize: 20971520, // 20MB
+      maxFiles: 25,
+      datePattern: '.dd-MM-yyyy',
+    }),
+  ],
+});
 
 const errHandler = function(err) {
     console.log(err);
@@ -75,16 +103,24 @@ logger.write =  (level, message,cookie) => {
 
 }
 
-logger.error =  (message) => {
-        initialize().then(function(cookie) {
-                    logger.write('error',message,cookie)
-        });
+logger.error =  (message, onlywinston = 0) => {
+        if (!onlywinston) {
+            initialize().then(function(cookie) {
+                      logger.write('error',message,cookie)
+          });   
+        }
+
+        winston_logger.error(message);   
 };
 
-logger.info =  (message) => {
-        initialize().then(function(cookie) {
-                    logger.write('info',message,cookie)
-        });
+logger.info =  (message, onlywinston = 0) => {
+        if (!onlywinston) {
+            initialize().then(function(cookie) {
+                      logger.write('info',message,cookie)
+          });   
+        }
+
+        winston_logger.info(message); 
 };
 
 export default logger;
