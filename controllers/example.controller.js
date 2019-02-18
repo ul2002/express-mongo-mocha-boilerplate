@@ -3,7 +3,8 @@ import * as bcrypt from 'bcryptjs';
 import { translate } from '../core/utils/helpers';
 
 import {
-  DEV_UPDATE_FAILED,
+  DEV_FINDALL_FAILED,
+  DEV_UPDATE_FAILED, PROD_FINDALL_FAILED,
   PROD_UPDATE_FAILED
 } from '../core/utils/constants';
 
