@@ -21,10 +21,9 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
-
 const logger = {};
 
-const winston_logger = new winston.Logger({
+const local_logger = new winston.Logger({
   level: 'info',
   transports: [
     new (winston.transports.Console)({
@@ -105,22 +104,22 @@ logger.write =  (level, message,cookie) => {
 
 logger.error =  (message, onlywinston = 0) => {
         if (!onlywinston) {
-            initialize().then(function(cookie) {
+          initialize().then(function(cookie) {
                       logger.write('error',message,cookie)
           });   
         }
 
-        winston_logger.error(message);   
+        local_logger.error(message);   
 };
 
 logger.info =  (message, onlywinston = 0) => {
         if (!onlywinston) {
-            initialize().then(function(cookie) {
+          initialize().then(function(cookie) {
                       logger.write('info',message,cookie)
           });   
         }
 
-        winston_logger.info(message); 
+        local_logger.info(message); 
 };
 
 export default logger;
