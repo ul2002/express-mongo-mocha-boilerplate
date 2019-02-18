@@ -13,5 +13,5 @@ export const DEV_FIND_FAILED = 'Failed to get';
 export const PROD_FIND_FAILED = 'Got error in get';
 export const DEV_FINDALL_FAILED = 'Error in getting';
 export const PROD_FINDALL_FAILED = 'Got error in get all';
-
+export const WELCOME_MESSAGE = 'Welcome on Express-Mongo-Mocha !';
 export const APIDOC_REGEX = '\\/(css|vendor|img|fonts|locales|utils)\\/[a-z_-]+(\\.[a-z_]+)+';

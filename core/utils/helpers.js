@@ -58,21 +58,19 @@ export const uploadFile = async (req, res) => {
   return await promise;
 };
 
-
-export const translate =  (text, lang) => {
-  const dir = path.join(__dirname, '../../lang/'+lang+'/');
+export const translate = (text, lang) => {
+  const dir = path.join(__dirname, `../../lang/${lang}/`);
   let dictionary = {};
-  let files = fs.readdirSync(dir);
+  const files = fs.readdirSync(dir);
 
-  files.forEach(file => {
-    let fileStat = fs.statSync(dir + '/' + file).isDirectory();
-    if(!fileStat) {
-      let data=fs.readFileSync(`${dir}${file}`, 'utf8');
-      let content=JSON.parse(data);
-      dictionary = {...dictionary, ...content} ;
+  files.forEach((file) => {
+    const fileStat = fs.statSync(`${dir}/${file}`).isDirectory();
+    if (!fileStat) {
+      const data = fs.readFileSync(`${dir}${file}`, 'utf8');
+      const content = JSON.parse(data);
+      dictionary = { ...dictionary, ...content };
     }
-  })
+  });
 
   return (text in dictionary) ? dictionary[text] : text;
-
 };

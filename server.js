@@ -17,7 +17,7 @@ import exampleRoute from './routes/example.route';
 const port = process.env.SERVER_PORT;
 logger.stream = {
   write(message, encoding) {
-    //logger.info(`${message} - ${encoding !== undefined ? encoding.toString() : ''}`);
+    // logger.info(`${message} - ${encoding !== undefined ? encoding.toString() : ''}`);
   },
 };
 
@@ -51,5 +51,5 @@ const exampleRouter = exampleRoute(router, io);
 app.use(router);
 
 server.listen(port, () => {
-  //logger.info('Server started - ', port);
+  logger.info(`Server started - ${port}`, 1);
 });

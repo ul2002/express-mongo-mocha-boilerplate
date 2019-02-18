@@ -1,6 +1,6 @@
 import Mongoose from 'mongoose';
 import logger from '../core/logger/app-logger';
-import { DB_CONNECTION_FAILED, DB_CONNECTION_SUCCESS } from '../core/utils/constants';
+import { DB_CONNECTION_SUCCESS } from '../core/utils/constants';
 
 Mongoose.Promise = global.Promise;
 
@@ -17,7 +17,7 @@ const dbConnection = async () => {
     } else {
       await Mongoose.connect(`mongodb://${dbUser}:${dbPswd}@${dbHost}:${dbPort}/${dbName}`, { useMongoClient: true });
     }
-    logger.info(DB_CONNECTION_SUCCESS,1);
+    logger.info(DB_CONNECTION_SUCCESS, 1);
   } catch (err) {
     logger.error(err.stack);
   }
