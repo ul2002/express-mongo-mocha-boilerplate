@@ -12,6 +12,8 @@ import dbConnection from './db/connect';
 import authMiddleware from './core/middleware/auth';
 import defaultRoute from './routes/default.route';
 import exampleRoute from './routes/example.route';
+import userRoute from './routes/users.route';
+import authRoute from './routes/auth.route';
 
 
 const port = process.env.SERVER_PORT;
@@ -43,13 +45,15 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use(authMiddleware);
+//app.use(authMiddleware);
 
 const defaultRouter = defaultRoute(router, io);
 const exampleRouter = exampleRoute(router, io);
+const userRouter = userRoute(router, io);
+const authRouter = authRoute(router, io);
 
 app.use(router);
 
 server.listen(port, () => {
-  //logger.info('Server started - ', port);
+  logger.info('Server started - ', port);
 });

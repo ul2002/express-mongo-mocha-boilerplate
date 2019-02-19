@@ -1,4 +1,5 @@
 export const UNAUTHORIZED_MESSAGE = 'Access Unauthorized due to invalid authorization key.';
+export const UNAUTHORIZED_RESSOURCE = 'Unauthorized resource';
 export const ENDPOINT_NOT_FOUND = 'Endpoint not found !';
 export const NOT_FOUND_MESSAGE = 'Resource not found.';
 export const DB_CONNECTION_SUCCESS = 'Connected to mongo !';
@@ -13,5 +14,11 @@ export const DEV_FIND_FAILED = 'Failed to get';
 export const PROD_FIND_FAILED = 'Got error in get';
 export const DEV_FINDALL_FAILED = 'Error in getting';
 export const PROD_FINDALL_FAILED = 'Got error in get all';
+export const EMAIL_EXIST = 'The email address already exist !';
+export const NO_TOKEN_PROVIDED = 'No token provided';
+export const AUTHENTICATION_FAILED = 'Failed to authenticate token.';
+export const USER_NOT_FOUND = 'No user found';
+export const MAIL_FAILED = 'Error occurs when sending mail.';
+
 
 export const APIDOC_REGEX = '\\/(css|vendor|img|fonts|locales|utils)\\/[a-z_-]+(\\.[a-z_]+)+';
