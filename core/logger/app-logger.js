@@ -5,20 +5,20 @@ import * as fs from 'fs';
 import * as winston from 'winston';
 import * as rotate from 'winston-daily-rotate-file';
 
-const request = require("request");
+const request = require('request');
 const uuidv4 = require('uuid/v4');
 
-const app_version = process.env.APP_VERSION;
-const app_name = process.env.APP_NAME;
-const logger_host = process.env.LOGGER_HOST;
-const logger_port = process.env.LOGGER_PORT;
-const logger_user = process.env.LOGGER_USER;
-const logger_password = process.env.LOGGER_PASSWORD;
+const appVersion = process.env.APP_VERSION;
+const appName = process.env.APP_NAME;
+const loggerHost = process.env.LOGGER_HOST;
+const loggerPort = process.env.LOGGER_PORT;
+const loggerUser = process.env.LOGGER_USER;
+const loggerPassword = process.env.LOGGER_PASSWORD;
 const dir = path.join(__dirname, process.env.LOG_FILE_DIR);
 
 const logger = {};
 
-const local_logger = new winston.Logger({
+const localLogger = new winston.Logger({
   level: 'info',
   transports: [
     new (winston.transports.Console)({
@@ -34,81 +34,81 @@ const local_logger = new winston.Logger({
   ],
 });
 
-const errHandler = function(err) {
+const errHandler = (err) => {
   console.log(err);
-}
+};
 
-const initialize =  () => {
+const initialize = () => {
   // Setting URL and headers for request
-  var options = {
-    url: `${logger_host}:${logger_port}/_session`,
+  const options = {
+    url: `${loggerHost}:${loggerPort}/_session`,
     headers: {
-      'User-Agent': 'request'
+      'User-Agent': 'request',
     },
     form: { 
-      name: logger_user,
-      password: logger_password
-    }
+      name: loggerUser,
+      password: loggerPassword,
+    },
   };
   // Return new promise 
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     // Do async job
-    request.post(options, function(err, resp, body) {
+    request.post(options, (err, resp, body) => {
       if (err) {
         reject(err);
       } else {
-        let cookies = resp.headers['set-cookie'][0].split(";")
+        const cookies = resp.headers['set-cookie'][0].split(';');
         resolve(cookies[0]);
       }
-    })
-  })
-}
+    });
+  });
+};
 
-logger.write =  (level, message,cookie) => {
+logger.write = (level, message, cookie) => {
   // Setting URL and headers for request
-  var options = {
-    url: `${logger_host}:${logger_port}/acra-storage/_design/acra-storage/_update/report`,
+  const options = {
+    url: `${loggerHost}:${loggerPort}/acra-storage/_design/acra-storage/_update/report`,
     headers: {
       'User-Agent': 'request',
-      'Cookie': cookie 
+      Cookie: cookie,
     },
     json: { 
-      APP_VERSION: app_version,
-      APP_NAME: app_name,
+      APP_VERSION: appVersion,
+      APP_NAME: appName,
       LEVEL: level,
       REPORT_ID: uuidv4(),
-      STACK_TRACE: message
-    }
+      STACK_TRACE: message,
+    },
   };
   // Return new promise 
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     // Do async job
-    request.put(options, function(err, resp, body) {
+    request.put(options, (err, resp, body) => {
       if (err) {
         reject(err);
       } else {
         resolve(body);
       }
-    })
-  })
-}
-
-logger.error =  (message, onlywinston = 0) => {
-  if (!onlywinston) {
-    initialize().then(function(cookie) {
-      logger.write('error',(message.stack) ? message.stack : message ,cookie)
-    });   
-  }
-  local_logger.error((message.stack) ? message.stack : message);   
+    });
+  });
 };
 
-logger.info =  (message, onlywinston = 0) => {
+logger.error = (message, onlywinston = 0) => {
   if (!onlywinston) {
-    initialize().then(function(cookie) {
-      logger.write('info',message,cookie)
+    initialize().then((cookie) => {
+      logger.write('error', (message.stack) ? message.stack : message, cookie);
     });   
   }
-  local_logger.info(message); 
+  localLogger.error((message.stack) ? message.stack : message);
+};
+
+logger.info = (message, onlywinston = 0) => {
+  if (!onlywinston) {
+    initialize().then((cookie) => {
+      logger.write('info', message, cookie);
+    });   
+  }
+  localLogger.info(message);
 };
 
 if (!fs.existsSync(dir)) {

@@ -20,7 +20,7 @@ const upload = multer({
   },
 }).single('file');
 
-const validateFile = function (file, cb) {
+const validateFile = (file, cb) => {
   const extension = (path.extname(file.originalname).toLowerCase() === '.json' || path.extname(file.originalname).toLowerCase() === '.csv');
   const mimeType = (file.mimetype.indexOf('json') > 0 || file.mimetype.indexOf('csv') > 0);
   if (extension) {

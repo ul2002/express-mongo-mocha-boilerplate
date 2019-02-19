@@ -19,6 +19,5 @@ export const NO_TOKEN_PROVIDED = 'No token provided';
 export const AUTHENTICATION_FAILED = 'Failed to authenticate token.';
 export const USER_NOT_FOUND = 'No user found';
 export const MAIL_FAILED = 'Error occurs when sending mail.';
-
-
+export const WELCOME_MESSAGE = 'Welcome on Express-Mongo-Mocha !';
 export const APIDOC_REGEX = '\\/(css|vendor|img|fonts|locales|utils)\\/[a-z_-]+(\\.[a-z_]+)+';
