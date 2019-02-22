@@ -1,8 +1,8 @@
-import * as bcrypt from 'bcryptjs';
 import * as fs from 'fs';
-import * as path from 'path';
 import moment from 'moment';
+import * as path from 'path';
 import * as crypto from 'crypto';
+import * as bcrypt from 'bcryptjs';
 
 const { validationResult }  = require('express-validator/check');
 

@@ -1,12 +1,12 @@
+import uuid from 'uuid/v4';
+import * as crypto from 'crypto';
+import * as bcrypt from 'bcryptjs';
+import config from '../config/jwt';
+import * as jwt from 'jsonwebtoken';
 import User from '../models/users.model';
 import logger from '../core/logger/app-logger';
 import smtpTransport from '../core/mailer/app-mailer';
 import { parseRequest } from '../core/utils/helpers';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import config from '../config/jwt';
-import uuid from 'uuid/v4';
-import * as crypto from 'crypto';
 
 import {
   DEV_FIND_FAILED,PROD_FIND_FAILED,NO_TOKEN_PROVIDED,AUTHENTICATION_FAILED,USER_NOT_FOUND,
@@ -27,7 +27,6 @@ controller.login = async (req, res) => {
         });
         res.status(200).send({ auth: true, user_id : user.user_id, token: token });
       });
-      //res.json(user);
     } catch (err) {
       logger.error(`${DEV_FIND_FAILED} auth- ${err}`);
       res.status(400).json({ error: `${PROD_FIND_FAILED} auth` });

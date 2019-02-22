@@ -1,11 +1,12 @@
+
+import uuid from 'uuid/v4';
+import * as bcrypt from 'bcryptjs';
+import config from '../config/jwt';
+import * as jwt from 'jsonwebtoken';
 import User from '../models/users.model';
 import logger from '../core/logger/app-logger';
-import { parseRequest, validationHandler } from '../core/utils/helpers'; 
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import config from '../config/jwt';
-import uuid from 'uuid/v4';
 import userTransformer from '../core/transformers/user';
+import { parseRequest, validationHandler } from '../core/utils/helpers'; 
 import userCollectionTransformer from '../core/transformers/usercollection';
 
 import {
