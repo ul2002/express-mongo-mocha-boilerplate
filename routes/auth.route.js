@@ -11,8 +11,12 @@ const prefix = `${process.env.API_BASE}auth`;
     controller.login(req, res);
   });
 
-  router.post(`${prefix}/forgot_password`, (req, res) => {
+  router.post(`${prefix}/forgot-password`, (req, res) => {
     controller.forgotPassword(req, res);
+  });
+
+  router.post(`${prefix}/reset-password`, (req, res) => {
+    controller.resetPassword(req, res);
   });
   
 }

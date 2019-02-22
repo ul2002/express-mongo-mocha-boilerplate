@@ -9,7 +9,8 @@ import uuid from 'uuid/v4';
 import * as crypto from 'crypto';
 
 import {
-  DEV_FIND_FAILED,PROD_FIND_FAILED,NO_TOKEN_PROVIDED,AUTHENTICATION_FAILED,USER_NOT_FOUND,MAIL_FAILED
+  DEV_FIND_FAILED,PROD_FIND_FAILED,NO_TOKEN_PROVIDED,AUTHENTICATION_FAILED,USER_NOT_FOUND,
+  MAIL_FAILED,RESET_PASSWORD_SUCCESS,RESET_PASSWORD_FAILED,MAIL_SUCCESS,RESET_PASSWORD_EXPIRED
 } from '../core/utils/constants';
 
 const controller = {};
@@ -33,64 +34,75 @@ controller.login = async (req, res) => {
     }
 };
 
-controller.me = async (req, res) => {
-    try {
-      var token = req.headers['x-access-token'];
-      if (!token) return res.status(401).send({ auth: false, message: NO_TOKEN_PROVIDED });
-      
-      jwt.verify(token, config.secret, function(err, decoded) {
-        if (err) return res.status(500).send({ auth: false, message: AUTHENTICATION_FAILED });
-        console.log(decoded.id);
-        User.findOne({user_id: decoded.id}, { password: 0 }, function (err, user) {
-          if (err) return res.status(500).send("There was a problem finding the user.");
-          if (!user) return res.status(404).send(USER_NOT_FOUND);
-          
-          res.status(200).send(user);
-        });
-      });
-      //res.json(user);
-    } catch (err) {
-      logger.error(`${DEV_FIND_FAILED} auth- ${err}`);
-      res.status(400).json({ error: `${PROD_FIND_FAILED} auth` });
-    }
-};
-
 controller.forgotPassword = async (req, res) => {
     try {
-     const email = req.body.email;
-     let user = await User.findOne({email: email});
+      const email = req.body.email;
+      let user = await User.findOne({email: email});
 
-     if (!user) 
+      if (!user) 
         return res.status(422).json({ error: USER_NOT_FOUND });
 
-      var token = crypto.randomBytes(20).toString('base64');
+      let token = bcrypt.hashSync(user.email, 8);
 
-      console.log(user);
+      user = await User.findOneAndUpdate({ user_id: user.user_id }, { email_token: token, reset_password_expires: Date.now() + 86400 });
 
-      user = await User.findOneAndUpdate({ user_id: user.user_id }, { email_token: token, reset_password_expires: Date.now() + 86400000 });
-        
       var data = {
         to: user.email,
         from: email,
         template: 'forgot-password-email',
         subject: 'Password help has arrived!',
         context: {
-          url: 'http://localhost:3000/auth/reset_password?token=' + token,
+          url: `${process.env.BASE_URL}:${process.env.SERVER_PORT}/auth/reset_password?token=${token}`,
           name: user.username
         }
       };
 
-      smtpTransport.sendMail(data, function(err) {
-        if (!err) {
-          return res.json({ message: 'Kindly check your email for further instructions' });
-        } else {
-          logger.error(`${MAIL_FAILED} auth- ${err}`);
-          return res.status(400).json({ message: 'Error occurs when sending mail' });
-        }
-      });
+      smtpTransport.sendMail(data);
+
+      return res.json({ message: MAIL_SUCCESS });
 
     } catch (err) {
       logger.error(`${MAIL_FAILED} auth- ${err}`);
+      res.status(400).json({ error: `${MAIL_FAILED} auth` });
+    }
+};
+
+controller.resetPassword = async (req, res) => {
+    const email_token = req.body.email_token;
+    let data = parseRequest(req.body, User.updateParams);
+    data.password = bcrypt.hashSync(data.password, 8);
+
+    try {
+      let user = await User.findOne({ email_token: email_token });
+      let expired = user.reset_password_expires;
+      let today = Date.now();
+
+      if (today >= expired){
+        return res.status(400).json({ message: RESET_PASSWORD_EXPIRED });
+      }
+
+      await User.change(user.user_id, data);
+
+      return res.json({ message: RESET_PASSWORD_SUCCESS });
+    } catch (err) {
+      logger.error(`${RESET_PASSWORD_FAILED} auth- ${err}`);
+      res.status(400).json({ error: `${RESET_PASSWORD_FAILED}` });
+    }
+};
+
+controller.me = async (req, res) => {
+    try {
+      var token = req.headers['x-access-token'];
+      if (!token) return res.status(401).json({ auth: false, message: NO_TOKEN_PROVIDED });
+      
+      jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) 
+          return res.status(400).json({ auth: false, message: AUTHENTICATION_FAILED });
+        user = User.findOne({user_id: decoded.id}, { password: 0 });
+        res.json(user);
+      });
+    } catch (err) {
+      logger.error(`${DEV_FIND_FAILED} auth- ${err}`);
       res.status(400).json({ error: `${PROD_FIND_FAILED} auth` });
     }
 };

@@ -39,7 +39,7 @@ const UserSchema = new Schema({
   },
   token: String,
   avatar: String,
-}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }, collection: 'users' });
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at', resetPasswordExpires: 'reset_password_expires' }, collection: 'users' });
 
 const UsersModel = mongoose.model('User', UserSchema);
 
@@ -58,7 +58,7 @@ UsersModel.delete = (id) => {
 };
 
 UsersModel.get = (id) => {
-  return UsersModel.find({ user_id: id });
+  return UsersModel.findOne({ user_id: id });
 };
 
 UsersModel.change = (id, data) => {
@@ -73,7 +73,6 @@ UsersModel.updateParams = [
   'name',
   'username',
   'email',
-  'ancienpassword',
   'password',
   'confirmed',
   'avatar',

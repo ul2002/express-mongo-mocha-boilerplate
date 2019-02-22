@@ -1,0 +1,11 @@
+{
+    "username.empty": "username may not be empty",
+    "username.exist": "the username alraidy exist",
+    "name.empty": "username may not be empty",
+    "email.empty": "the email may not be empty",
+    "email.invalid": "the email is invalid",
+    "email.exist": "the email alraidy exist",
+    "password.empty": "the password may not be empty",
+    "password.invalid": "the password elngth should be greater than 5"
+    
+}

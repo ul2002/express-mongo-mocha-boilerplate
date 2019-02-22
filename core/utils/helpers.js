@@ -2,6 +2,9 @@ import * as bcrypt from 'bcryptjs';
 import * as fs from 'fs';
 import * as path from 'path';
 import moment from 'moment';
+import * as crypto from 'crypto';
+
+const { validationResult }  = require('express-validator/check');
 
 const uploadHandler = require('./uploadHandler');
 
@@ -74,3 +77,14 @@ export const translate = (text, lang) => {
 
   return (text in dictionary) ? dictionary[text] : text;
 };
+
+export const validationHandler = (res, req, next) => {
+ //const errors = req.validationErrors();
+ const errors = validationResult(req);
+
+ if (!errors.isEmpty()) {
+  var result=  errors.array().map((item) => {return { [item.param]: item.msg }})
+  return res.status(400).json({ errors: result });
+  }
+  next();
+}

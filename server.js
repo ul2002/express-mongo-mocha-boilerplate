@@ -10,10 +10,12 @@ import socketIO from 'socket.io';
 import logger from './core/logger/app-logger';
 import dbConnection from './db/connect';
 import authMiddleware from './core/middleware/auth';
+import verifyLangMiddleware from './core/middleware/verifyLang';
 import defaultRoute from './routes/default.route';
 import exampleRoute from './routes/example.route';
 import userRoute from './routes/users.route';
 import authRoute from './routes/auth.route';
+import  expressValidator from  'express-validator';
 
 
 const port = process.env.SERVER_PORT;
@@ -36,6 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev', { stream: logger.stream }));
+app.use(expressValidator());
 
 io.on('connection', (socket) => {
   console.log('User connected');
@@ -45,7 +48,7 @@ io.on('connection', (socket) => {
   });
 });
 
-//app.use(authMiddleware);
+app.use(verifyLangMiddleware);
 
 const defaultRouter = defaultRoute(router, io);
 const exampleRouter = exampleRoute(router, io);
