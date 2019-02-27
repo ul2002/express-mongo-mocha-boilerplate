@@ -5,8 +5,8 @@ import config from '../config/jwt';
 import * as jwt from 'jsonwebtoken';
 import User from '../models/users.model';
 import logger from '../core/logger/app-logger';
-import smtpTransport from '../core/mailer/app-mailer';
 import { parseRequest } from '../core/utils/helpers';
+import smtpTransport from '../core/mailer/app-mailer';
 
 import {
   DEV_FIND_FAILED,PROD_FIND_FAILED,NO_TOKEN_PROVIDED,AUTHENTICATION_FAILED,USER_NOT_FOUND,

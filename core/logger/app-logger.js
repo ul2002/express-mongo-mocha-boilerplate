@@ -16,6 +16,9 @@ const loggerUser = process.env.LOGGER_USER;
 const loggerPassword = process.env.LOGGER_PASSWORD;
 const dir = path.join(__dirname, process.env.LOG_FILE_DIR);
 
+
+const baseUrl = loggerPort ? `${loggerHost}:${loggerPort}` : `${loggerHost}`;
+
 const logger = {};
 
 const localLogger = new winston.Logger({
@@ -41,7 +44,7 @@ const errHandler = (err) => {
 const initialize = () => {
   // Setting URL and headers for request
   const options = {
-    url: `${loggerHost}:${loggerPort}/_session`,
+    url: `${baseUrl}/_session`,
     headers: {
       'User-Agent': 'request',
     },
@@ -67,7 +70,7 @@ const initialize = () => {
 logger.write = (level, message, cookie) => {
   // Setting URL and headers for request
   const options = {
-    url: `${loggerHost}:${loggerPort}/acra-storage/_design/acra-storage/_update/report`,
+    url: `${baseUrl}/acra-storage/_design/acra-storage/_update/report`,
     headers: {
       'User-Agent': 'request',
       Cookie: cookie,
