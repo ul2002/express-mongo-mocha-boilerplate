@@ -1,8 +1,9 @@
 const verifyLang = (req, res, next) => {
   var lang = req.headers['language'];
-  if (!lang)
-    global.language= 'en';
-  global.language= lang;
+  if( typeof lang == 'undefined' || lang == null )
+    global.language = 'en';
+  else
+  	global.language = lang;
   next();
 };
 

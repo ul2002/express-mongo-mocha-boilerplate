@@ -5,9 +5,9 @@ import config from '../config/jwt';
 import * as jwt from 'jsonwebtoken';
 import User from '../models/users.model';
 import logger from '../core/logger/app-logger';
-import userTransformer from '../core/transformers/user';
+import userSingleTransformer from '../core/transformers/user/single';
 import { parseRequest, validationHandler } from '../core/utils/helpers'; 
-import userCollectionTransformer from '../core/transformers/usercollection';
+import userCollectionTransformer from '../core/transformers/user/collection';
 
 import {
   DELETION_FAILED, DELETION_SUCCESS, DEV_CREATION_FAILED, DEV_FIND_FAILED, DEV_FINDALL_FAILED,
@@ -55,7 +55,7 @@ controller.show = async (req, res) => {
       const user = await User.get(req.params.id); 
       if (!user)
          return res.status(404).json({ message: NOT_FOUND_MESSAGE });
-      res.json(userTransformer(user));
+      res.json(userSingleTransformer(user));
     } catch (err) {
       logger.error(`${DEV_FIND_FAILED} user- ${err}`);
       res.status(400).json({ error: `${PROD_FIND_FAILED} user` });
@@ -76,7 +76,7 @@ controller.update = async (req, res, io) => {
       await User.change(id, user);
     }
     updatedUser = await User.get(id);
-    res.json(userTransformer(updatedUser));
+    res.json(userSingleTransformer(updatedUser));
   } catch (err) {
     logger.error(`${DEV_UPDATE_FAILED} user- ${err}`);
     res.status(400).json({ error: `${PROD_UPDATE_FAILED} user` });

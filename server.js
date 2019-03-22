@@ -58,5 +58,5 @@ const authRouter = authRoute(router, io);
 app.use(router);
 
 server.listen(port, () => {
-  logger.info(`Server started - ${port}`, 1);
+  logger.info(`Server started - ${port}`);
 });

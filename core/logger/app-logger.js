@@ -8,6 +8,7 @@ import * as rotate from 'winston-daily-rotate-file';
 const request = require('request');
 const uuidv4 = require('uuid/v4');
 
+const loggerEnable = process.env.LOGGER_ENABLE;
 const appVersion = process.env.APP_VERSION;
 const appName = process.env.APP_NAME;
 const loggerHost = process.env.LOGGER_HOST;
@@ -96,8 +97,8 @@ logger.write = (level, message, cookie) => {
   });
 };
 
-logger.error = (message, onlywinston = 0) => {
-  if (!onlywinston) {
+logger.error = (message) => {
+  if (loggerEnable == 'true') {
     initialize().then((cookie) => {
       logger.write('error', (message.stack) ? message.stack : message, cookie);
     });   
@@ -105,8 +106,8 @@ logger.error = (message, onlywinston = 0) => {
   localLogger.error((message.stack) ? message.stack : message);
 };
 
-logger.info = (message, onlywinston = 0) => {
-  if (!onlywinston) {
+logger.info = (message) => {
+  if (loggerEnable == 'true') {
     initialize().then((cookie) => {
       logger.write('info', message, cookie);
     });   
